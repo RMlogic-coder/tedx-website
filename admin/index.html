@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NAVONMESH — Speaker CMS & Reveal Control Center</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/navonmesh-logo.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body>
+  <!-- AUTHENTICATION SCREEN -->
+  <div id="login-section" class="login-container">
+    <div class="login-card">
+      <div class="login-header">
+        <span class="login-brand-tag">TEDxIIIT Raichur • 2026</span>
+        <h1 class="login-title">NAVONMESH ADMIN</h1>
+        <p class="login-subtitle">Speaker CMS & Stage Reveal Control System</p>
+      </div>
+
+      <div id="login-error-msg" class="login-error"></div>
+
+      <form id="login-form" class="login-form">
+        <div class="form-group">
+          <label for="admin-pass">Master Passphrase</label>
+          <input type="password" id="admin-pass" class="form-input" placeholder="Enter admin passphrase..." autocomplete="current-password" required />
+        </div>
+        <button type="submit" class="login-btn" id="login-submit-btn">Authenticate Session</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ADMIN DASHBOARD WRAPPER -->
+  <div id="dashboard-section" class="dashboard-wrapper">
+    <!-- Navbar -->
+    <header class="admin-navbar">
+      <div class="admin-nav-brand">
+        <div class="admin-logo-text">TED<span>x</span>IIITRaichur</div>
+        <span class="admin-badge">SPEAKER CMS</span>
+      </div>
+
+      <div class="admin-nav-actions">
+        <a href="/" target="_blank" rel="noopener noreferrer" class="btn-secondary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <line x1="10" y1="14" x2="21" y2="3"></line>
+          </svg>
+          Live Public Stage
+        </a>
+        <button type="button" id="logout-btn" class="btn-secondary">Logout</button>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+      <!-- Overview & Progress Bar -->
+      <section class="controls-card">
+        <div class="admin-progress-container">
+          <div class="admin-progress-header">
+            <div class="progress-title-wrap">
+              <span class="progress-eyebrow">STAGE REVEAL STATUS</span>
+              <h3 class="progress-main-stat"><span id="admin-revealed-count">0</span> / <span id="admin-total-count">8</span> <span class="progress-percent" id="admin-progress-percent">(0%)</span></h3>
+            </div>
+            <div class="stats-mini-pills">
+              <span class="mini-pill full"><strong id="pill-full">0</strong> Full</span>
+              <span class="mini-pill domain"><strong id="pill-domain">0</strong> Domain</span>
+              <span class="mini-pill hint"><strong id="pill-hint">0</strong> Hint</span>
+              <span class="mini-pill locked"><strong id="pill-locked">0</strong> Locked</span>
+            </div>
+          </div>
+          <div class="admin-progress-track">
+            <div class="admin-progress-fill" id="admin-progress-fill" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <div class="action-buttons-group">
+          <button type="button" id="btn-reveal-next" class="btn-primary-action">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+            Reveal Next Speaker
+          </button>
+
+          <button type="button" id="btn-reveal-all-domains" class="btn-action-amber">
+            Reveal All Domains
+          </button>
+
+          <button type="button" id="btn-reveal-all-full" class="btn-action-green">
+            Reveal All (Full)
+          </button>
+
+          <button type="button" id="btn-hide-all" class="btn-action-red">
+            Reset / Lock All
+          </button>
+        </div>
+      </section>
+
+      <!-- Speaker Roster Section -->
+      <section class="roster-section">
+        <div class="roster-header">
+          <div class="roster-title-wrap">
+            <h2 class="roster-title">SPEAKERS</h2>
+            <span class="roster-count-badge" id="roster-count-badge">8 SPEAKERS</span>
+          </div>
+          <div class="live-indicator">
+            <span class="live-dot"></span>
+            Real-Time SSE Sync Active
+          </div>
+        </div>
+
+        <div id="speakers-list" class="speakers-list">
+          <!-- Dynamically populated by admin.js -->
+        </div>
+      </section>
+    </main>
+
+    <div id="toast-notice" class="toast-notice"></div>
+  </div>
+
+  <!-- SPEAKER EDIT MODAL -->
+  <div id="edit-modal" class="modal-backdrop" style="display: none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <span class="modal-eyebrow" id="modal-eyebrow">SPEAKER MANAGEMENT</span>
+          <h2 class="modal-title" id="modal-title">EDIT SPEAKER</h2>
+        </div>
+        <button type="button" class="modal-close-btn" id="modal-close-btn" aria-label="Close modal">×</button>
+      </div>
+
+      <form id="speaker-edit-form" class="modal-form">
+        <!-- Photo Management -->
+        <div class="form-section photo-section">
+          <label class="section-label">Profile Photo</label>
+          <div class="photo-upload-row">
+            <div class="photo-preview-box">
+              <img id="edit-photo-preview" src="/assets/speakers/speaker-01.jpg" alt="Preview" />
+            </div>
+            <div class="photo-upload-controls">
+              <input type="file" id="edit-photo-input" accept="image/jpeg,image/png,image/webp" style="display: none;" />
+              <button type="button" class="btn-upload-photo" id="btn-trigger-upload">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="17 8 12 3 7 8"></polyline>
+                  <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+                Upload Photo
+              </button>
+              <button type="button" class="btn-remove-photo" id="btn-remove-photo">Reset Default</button>
+              <span class="photo-help-text">JPG, PNG, WebP supported. Auto-optimized.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Basic Information -->
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label for="edit-name">Speaker Name *</label>
+            <input type="text" id="edit-name" class="form-input" placeholder="e.g. Dr. Aarav Chen" required />
+          </div>
+
+          <div class="form-group">
+            <label for="edit-designation">Designation / Role *</label>
+            <input type="text" id="edit-designation" class="form-input" placeholder="e.g. Quantum Physicist & Neural Architect" required />
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label for="edit-organization">Organization / Company</label>
+            <input type="text" id="edit-organization" class="form-input" placeholder="e.g. Quantum Neural Labs" />
+          </div>
+
+          <div class="form-group">
+            <label for="edit-domain">Domain *</label>
+            <input type="text" id="edit-domain" class="form-input" list="domain-suggestions" placeholder="e.g. Quantum Computing" required />
+            <datalist id="domain-suggestions">
+              <option value="Artificial Intelligence"></option>
+              <option value="Quantum Computing"></option>
+              <option value="Synthetic Biology"></option>
+              <option value="Interstellar Dynamics"></option>
+              <option value="Acoustic Anthropology"></option>
+              <option value="Zero-Point Energy"></option>
+              <option value="Cognitive Sovereignty"></option>
+              <option value="Neuro-Prosthetics"></option>
+              <option value="Atmospheric Engineering"></option>
+              <option value="Entrepreneurship"></option>
+              <option value="Design"></option>
+              <option value="Psychology"></option>
+              <option value="Science"></option>
+              <option value="Innovation"></option>
+              <option value="Social Impact"></option>
+            </datalist>
+          </div>
+        </div>
+
+        <!-- Clue / Hint -->
+        <div class="form-group">
+          <label for="edit-hint">Mystery Hint (Shown during "Hint Revealed" & "Domain Revealed") *</label>
+          <textarea id="edit-hint" class="form-textarea" rows="2" placeholder="Enter the clue that visitors will see before full reveal..." required></textarea>
+        </div>
+
+        <!-- Talk Details -->
+        <div class="form-group">
+          <label for="edit-talk-title">Talk Title</label>
+          <input type="text" id="edit-talk-title" class="form-input" placeholder="e.g. Beyond Silicon: Mapping the Subatomic Mind" />
+        </div>
+
+        <div class="form-group">
+          <label for="edit-talk-desc">Talk Description</label>
+          <textarea id="edit-talk-desc" class="form-textarea" rows="2" placeholder="Brief summary of the talk topic and its significance..."></textarea>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label for="edit-bio">Speaker Biography</label>
+            <textarea id="edit-bio" class="form-textarea" rows="2" placeholder="Speaker biographical background..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="edit-quote">Featured Quote / Key Takeaway</label>
+            <textarea id="edit-quote" class="form-textarea" rows="2" placeholder="Memorable speaker quote..."></textarea>
+          </div>
+        </div>
+
+        <!-- Social / External URLs -->
+        <div class="form-section">
+          <label class="section-label">Social & External Links (Optional)</label>
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label for="edit-linkedin">LinkedIn URL</label>
+              <input type="url" id="edit-linkedin" class="form-input" placeholder="https://linkedin.com/in/username" />
+            </div>
+
+            <div class="form-group">
+              <label for="edit-twitter">X / Twitter URL</label>
+              <input type="url" id="edit-twitter" class="form-input" placeholder="https://x.com/username" />
+            </div>
+
+            <div class="form-group">
+              <label for="edit-instagram">Instagram URL</label>
+              <input type="url" id="edit-instagram" class="form-input" placeholder="https://instagram.com/username" />
+            </div>
+
+            <div class="form-group">
+              <label for="edit-website">Website URL</label>
+              <input type="url" id="edit-website" class="form-input" placeholder="https://speakerwebsite.com" />
+            </div>
+          </div>
+        </div>
+
+        <hr class="form-divider" />
+
+        <!-- Reveal Stage & Published Toggle -->
+        <div class="form-grid-2 form-meta-row">
+          <div class="form-group">
+            <label>Reveal Stage</label>
+            <div class="stage-radio-group">
+              <label class="stage-radio-option">
+                <input type="radio" name="modal-stage" value="LOCKED" />
+                <span>Locked</span>
+              </label>
+              <label class="stage-radio-option">
+                <input type="radio" name="modal-stage" value="HINT_REVEALED" />
+                <span>Hint</span>
+              </label>
+              <label class="stage-radio-option">
+                <input type="radio" name="modal-stage" value="DOMAIN_REVEALED" />
+                <span>Domain</span>
+              </label>
+              <label class="stage-radio-option">
+                <input type="radio" name="modal-stage" value="FULL_SPEAKER_REVEALED" />
+                <span>Full Reveal</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Publish Status</label>
+            <div class="publish-toggle-wrap">
+              <label class="toggle-switch">
+                <input type="checkbox" id="edit-published" checked />
+                <span class="toggle-slider"></span>
+              </label>
+              <span id="published-status-text" class="published-text">Published (Visible on Stage)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal Actions -->
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" id="btn-modal-cancel">Cancel</button>
+          <button type="button" class="btn-preview-modal" id="btn-modal-preview">Preview Card</button>
+          <button type="submit" class="btn-save-changes" id="btn-modal-save">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- LIVE CARD PREVIEW MODAL -->
+  <div id="preview-modal" class="modal-backdrop" style="display: none;">
+    <div class="modal-card preview-modal-card">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <span class="modal-eyebrow">INTERACTIVE SIMULATION</span>
+          <h2 class="modal-title" id="preview-title">CARD PREVIEW</h2>
+        </div>
+        <button type="button" class="modal-close-btn" id="preview-close-btn">×</button>
+      </div>
+
+      <div class="preview-tabs">
+        <button type="button" class="btn-preview-tab" data-preview-stage="LOCKED">Locked</button>
+        <button type="button" class="btn-preview-tab" data-preview-stage="HINT_REVEALED">Hint Revealed</button>
+        <button type="button" class="btn-preview-tab active" data-preview-stage="DOMAIN_REVEALED">Domain Revealed</button>
+        <button type="button" class="btn-preview-tab" data-preview-stage="FULL_SPEAKER_REVEALED">Fully Revealed</button>
+      </div>
+
+      <div class="preview-stage-container" id="preview-card-viewport">
+        <!-- Dynamically rendered card preview -->
+      </div>
+    </div>
+  </div>
+
+  <!-- CONFIRMATION DIALOG (Unsaved Changes / Bulk Actions) -->
+  <div id="confirm-modal" class="modal-backdrop" style="display: none; z-index: 3000;">
+    <div class="confirm-dialog-card">
+      <h3 class="confirm-title" id="confirm-title">Unsaved Changes</h3>
+      <p class="confirm-message" id="confirm-message">You have unsaved changes. Discard changes?</p>
+      <div class="confirm-actions">
+        <button type="button" class="btn-cancel" id="btn-confirm-cancel">Cancel</button>
+        <button type="button" class="btn-confirm-danger" id="btn-confirm-proceed">Discard</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/admin/admin.js"></script>
+</body>
+</html>

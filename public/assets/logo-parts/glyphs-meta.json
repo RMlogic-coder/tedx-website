@@ -1,0 +1,44 @@
+[
+  {
+    "index": 0,
+    "label": "N_1",
+    "width": 397,
+    "height": 411
+  },
+  {
+    "index": 1,
+    "label": "A",
+    "width": 418,
+    "height": 408
+  },
+  {
+    "index": 2,
+    "label": "V",
+    "width": 408,
+    "height": 408
+  },
+  {
+    "index": 3,
+    "label": "O",
+    "width": 378,
+    "height": 419
+  },
+  {
+    "index": 4,
+    "label": "N_2",
+    "width": 397,
+    "height": 411
+  },
+  {
+    "index": 5,
+    "label": "ME",
+    "width": 357,
+    "height": 512
+  },
+  {
+    "index": 6,
+    "label": "SH",
+    "width": 346,
+    "height": 359
+  }
+]

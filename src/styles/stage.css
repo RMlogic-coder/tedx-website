@@ -1,0 +1,289 @@
+/* Stage & Hero 3D Experience — Original NAVONमेष SVG Logo (navonmesh-logo.svg) */
+
+.hero-scroll-container {
+  position: relative;
+  width: 100%;
+  background-color: transparent;
+  z-index: 5;
+}
+
+.hero-stage-pinned {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  perspective: 1400px;
+  perspective-origin: 50% 50%;
+  background: transparent;
+  user-select: none;
+  z-index: 5;
+}
+
+/* Subtle Stage Ambient Lighting (Soft, non-glowing) */
+.stage-ambient-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 45%, rgba(20, 20, 28, 0.6) 0%, transparent 75%);
+  z-index: 3;
+  transition: opacity 0.5s ease;
+}
+
+.stage-spotlight {
+  position: absolute;
+  top: -15vh;
+  left: 50%;
+  transform: translateX(-50%);
+  width: clamp(380px, 70vw, 900px);
+  height: 120vh;
+  background: conic-gradient(
+    from 180deg at 50% 0%,
+    transparent 45deg,
+    rgba(255, 255, 255, 0.03) 75deg,
+    rgba(255, 255, 255, 0.06) 90deg,
+    rgba(255, 255, 255, 0.03) 105deg,
+    transparent 135deg
+  );
+  filter: blur(50px);
+  pointer-events: none;
+  opacity: 0.6;
+  z-index: 4;
+  transition: opacity 0.4s ease;
+}
+
+/* Stage Presence Eyebrow Badge */
+.stage-tagline {
+  position: absolute;
+  top: 13vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  z-index: 10;
+  opacity: 0.95;
+  transition: opacity 0.5s ease;
+}
+
+.stage-tagline .pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.45rem 1.25rem;
+  border-radius: 100px;
+  background: rgba(14, 14, 20, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(16px);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #e4e4e7;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+}
+
+.stage-tagline .pill .indicator-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--color-accent);
+  box-shadow: 0 0 8px var(--color-accent);
+  animation: pulse-dot 2s infinite ease-in-out;
+}
+
+/* 3D NAVONमेष Logo Chamber — Exact 754:170 original SVG aspect ratio */
+.logo-chamber {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1400px;
+  transform-style: preserve-3d;
+  z-index: 20;
+  pointer-events: none;
+  padding: 0 1.5rem;
+}
+
+.navonmesh-logo-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 820px;
+  aspect-ratio: 754 / 170;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-style: preserve-3d;
+}
+
+/* =========================================================================
+   LAYER A: The 7 Individual Slices of the Original Logo (Zero gap, 100% matched)
+   ========================================================================= */
+.navonmesh-glyphs-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: 0;
+  transform-style: preserve-3d;
+  z-index: 10;
+  pointer-events: none;
+  clip-path: inset(0 0% 0 0%);
+  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.9));
+  will-change: clip-path, transform;
+}
+
+.glyph-item {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  transform-style: preserve-3d;
+  will-change: transform, opacity, filter;
+  flex: var(--w);
+  max-width: 100%;
+}
+
+.glyph-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  display: block;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* =========================================================================
+   LAYER B: The Exact Original SVG Logo Asset (/assets/navonmesh-logo.svg)
+   ========================================================================= */
+.master-official-logo-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  pointer-events: none;
+  clip-path: inset(0 100% 0 0%);
+  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.9));
+  will-change: clip-path;
+}
+
+.master-official-logo-layer img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* =========================================================================
+   SHINE REFLECTION: Narrow, controlled, polished specular highlight (NO BLOOM)
+   ========================================================================= */
+.shine-sweep-beam {
+  position: absolute;
+  top: -15%;
+  bottom: -15%;
+  left: 0%;
+  width: 28px;
+  transform: translateX(-100%) skewX(-20deg);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.12) 20%,
+    rgba(255, 255, 255, 0.95) 50%,
+    rgba(255, 255, 255, 0.12) 80%,
+    transparent 100%
+  );
+  mix-blend-mode: screen;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 15;
+  will-change: transform, left, opacity;
+}
+
+/* Logo Tagline / Subtext */
+.logo-subtext {
+  position: absolute;
+  bottom: -55px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-size: clamp(0.72rem, 1.2vw, 0.95rem);
+  font-weight: 600;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  opacity: 0;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  pointer-events: auto;
+}
+
+.logo-subtext span {
+  color: #f5a623;
+  font-weight: 700;
+}
+
+/* Scroll Hint at bottom of Stage — Increased Width & Opacity */
+.scroll-indicator {
+  position: absolute;
+  bottom: 3.5vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.65rem;
+  z-index: 10;
+  color: #d4d4d8;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  opacity: 0.95;
+  transition: opacity 0.4s ease;
+}
+
+.scroll-indicator .scroll-line {
+  width: 3px; /* Increased thickness from 2px */
+  height: 42px; /* Increased height */
+  background: linear-gradient(180deg, var(--color-accent) 0%, rgba(255, 255, 255, 0.4) 100%); /* Higher opacity */
+  position: relative;
+  overflow: hidden;
+  border-radius: 2px;
+  box-shadow: 0 0 8px rgba(230, 43, 30, 0.4);
+}
+
+.scroll-indicator .scroll-line::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50%;
+  background-color: #ffffff;
+  animation: scroll-drop 1.8s infinite cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+@media (max-width: 768px) {
+  .logo-chamber {
+    top: 42%;
+    padding: 0 0.75rem;
+  }
+  
+  .logo-subtext {
+    bottom: -45px;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+  }
+}

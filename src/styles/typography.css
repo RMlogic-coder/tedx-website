@@ -1,0 +1,71 @@
+/* Editorial Typography System */
+:root {
+  --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  --font-mono: 'Space Grotesk', 'SF Mono', 'Fira Code', monospace;
+  
+  --color-bg: #060608;
+  --color-bg-secondary: #0c0c10;
+  --color-bg-card: #111116;
+  --color-bg-card-hover: #16161d;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #a1a1aa;
+  --color-text-muted: #71717a;
+  --color-accent: #e62b1e;
+  --color-accent-hover: #ff2a2a;
+  --color-accent-glow: rgba(230, 43, 30, 0.45);
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-hover: rgba(230, 43, 30, 0.3);
+  
+  --container-max: 1320px;
+}
+
+.text-editorial-hero {
+  font-size: clamp(3.5rem, 9vw, 9.5rem);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+
+.text-section-title {
+  font-size: clamp(2.5rem, 6.5vw, 6rem);
+  font-weight: 800;
+  line-height: 1.0;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+}
+
+.text-section-subtitle {
+  font-size: clamp(1.1rem, 2.2vw, 1.6rem);
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--color-text-secondary);
+  letter-spacing: -0.01em;
+}
+
+.text-eyebrow {
+  font-size: clamp(0.75rem, 1.2vw, 0.9rem);
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+.text-card-title {
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.text-card-role {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  letter-spacing: 0.02em;
+}
+
+.text-mono {
+  font-family: var(--font-mono);
+  letter-spacing: 0.05em;
+}
